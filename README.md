@@ -7,7 +7,7 @@ Toplam 3 modul seklinde, Rmarkdown ile baslayip, verilerin Rde kullanimi ve ggpl
 Toplam sure her bir modul icin 6 saat olup, toplam eğitim süresi 18 saatten oluşmaktadır
 
 ## Eğitim Takvimi 
-Toplam 3 hafta boyunca, haftada iki gun alti saat seklinde uygulanacaktir. Haftanin gunleri detayli olarak asagida verilmistir (16 Aralik gunu bir konferansta olacagim icin ve araya tatil de girince boyle organize etmek daha anlamli geldi, ancak karsilikli yine konusuruz bu detayi);
+Toplam 3 hafta boyunca, haftada iki gun alti saat seklinde uygulanacaktir. Haftanin gunleri detayli olarak asagida verilmistir;
 
 18 Aralik Carsamba, 14.00 - 17.00 : Modul 1 - Part 1 
 
