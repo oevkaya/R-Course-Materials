@@ -1,5 +1,8 @@
 Useful sources to use: 
 
+General Tips:
+https://slides.yihui.org/2019-DahShu-rmarkdown.html#1
+
 kableExtra
 https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html
 
