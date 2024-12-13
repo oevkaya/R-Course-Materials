@@ -1,0 +1,318 @@
+---
+title: "Rmd Introduction"
+author: "oevkaya"
+date: "`r Sys.Date()`"
+output: ioslides_presentation
+---
+
+## Modül 1: 
+
+R Markdown Giriş ve R Kodlarının R Markdown İçinde Çalıştırılması
+
+---
+
+### R Markdown Nedir? R Markdown Nasıl Çalışır?
+
+-   **R Markdown**, metin ve R kodunu bir araya getirerek dinamik raporlar oluşturmanızı sağlayan bir dosya formatıdır.
+-   **Çalışma Prensibi:**
+    -   Metin ve kod blokları bir arada bulunur.
+    -   Kod blokları çalıştırılarak çıktılar doğrudan dokümana eklenir.
+    -   Sonuçta, analiz ve raporlama süreçleri entegre edilir.
+    
+---
+
+### .Rmd Dosyasının İçeriği Nedir?
+
+-   **YAML Başlığı:**
+    -   Başlık, yazar, tarih ve çıktı formatı gibi meta verileri içerir.
+-   **Metin Bölümleri:**
+    -   Markdown dilini kullanarak biçimlendirilmiş açıklamalar ve analizler.
+-   **Kod Blokları:**
+    -   R kodunun çalıştırıldığı ve çıktılarının görüntülendiği bölümler.
+    
+
+---
+
+### ArkaPlan
+
+```{r}
+knitr::include_graphics("img/Rmd_Bground.png")
+# Other option 
+# ![Caption for the image](Rmd_Bground.png){width="50%"}
+```
+
+
+---
+
+### R Markdown Hangi Belge Formatlarını Destekler?
+
+-   **HTML:** Web tabanlı, etkileşimli içerik oluşturma.
+-   **PDF:** Yüksek kaliteli, yazdırılabilir belgeler.
+-   **Word:** Microsoft Word ile uyumlu düzenlenebilir dokümanlar.
+-   **Sunumlar:** ioslides, Beamer gibi formatlarla slaytlar oluşturma.
+
+---
+
+### .Rmd Dosyaları için Çalışma Ortamı Hazırlama
+
+-   **Gerekli Yazılımlar:**
+    -   **R:** İstatistiksel hesaplama ve grafikler için.
+    -   **RStudio:** R için entegre geliştirme ortamı.
+-   **Kurulum Adımları:**
+    -   R ve RStudio'yu resmi sitelerinden indirip yükleyin.
+    -   RStudio'da yeni bir R Markdown dosyası oluşturun ve gerekli paketleri yükleyin.
+    
+---
+
+### R, R Studio ve Gerekli Kütüphanelerin Kurulması
+
+-   **R ve RStudio Kurulumu:**
+    -   [CRAN](https://cran.r-project.org/) üzerinden R'yi indirin ve yükleyin.
+    -   [RStudio](https://www.rstudio.com/products/rstudio/download/) üzerinden RStudio'yu indirin ve yükleyin.
+-   **Gerekli Kütüphanelerin Yüklenmesi:**
+    -   RStudio'da aşağıdaki komutları çalıştırarak gerekli paketleri yükleyin:
+
+        ``` r
+        install.packages(c("rmarkdown", "knitr"))
+        ```
+---
+
+### Metin içi Temel Tasarım ve Metin Organizasyonu
+
+-   **Başlıklar:**
+    -   `#` ile ana başlık, `##` ile alt başlıklar oluşturulur.
+-   **Listelemeler:**
+    -   `-` veya `*` ile madde işaretli listeler.
+    -   `1.` ile numaralı listeler.
+-   **Vurgulamalar:**
+    -   *İtalik* için `*metin*` veya `_metin_`.
+    -   **Kalın** için `**metin**` veya `__metin__`.
+
+---
+
+### Formatting Text in R Markdown
+
+- **Headers:**
+  - `#` for H1
+  - `##` for H2
+  - `###` for H3, and so on.
+
+- **Emphasis:**
+  - *Italic:* `*italic*` or `_italic_`
+  - **Bold:** `**bold**` or `__bold__`
+  - ***Bold Italic:*** `***bold italic***`
+
+- **Lists:**
+  - **Unordered:** Use `-`, `*`, or `+` followed by a space.
+  - **Ordered:** Use numbers followed by a period, e.g., `1.`, `2.`
+
+---
+
+### Visual Markdown Editor
+
+- **Purpose:** Provides a what you see is what you get (WYSIWYG) interface for editing R Markdown documents.
+
+- **Features:**
+  - Real-time rendering of Markdown content.
+  - Toolbar for common formatting options.
+  - Easier insertion of images, links, and tables.
+
+- **Accessing in RStudio:**
+  - Click the visual editor button in the toolbar or press `Ctrl+Shift+F4` (Windows/Linux) or `Cmd+Shift+F4` (Mac).
+
+---
+
+### R Kod Bloklarının Kullanımı
+
+-   **Kod Blokları:**
+    -   Üç tırnak işareti ve `{r}` ile başlayan ve üç tırnak ile biten bloklar:
+
+        ```{{r}}
+        # R kodu buraya
+        ```
+-   **Kod Blokları Seçenekleri:**
+    -   `echo=FALSE`: Kodu gizler, sadece çıktıyı gösterir.
+    -   `eval=FALSE`: Kodu çalıştırmaz, sadece gösterir.
+    -   `include=FALSE`: Kodu ve çıktıyı gizler, ancak çalıştırır.
+
+---
+
+### Code Chunks in R Markdown
+
+- **Definition:** Sections of the document that contain executable code.
+
+- **Syntax:**
+
+
+  ```{r chunk-name}
+  # Your R code here
+  ```
+
+- **Chunk Name:** Optional but useful for reference.
+
+- **Languages Supported:** R, Python, SQL, and more.
+
+---
+
+### Code Chunk Options
+
+- **Purpose:** Control the behavior and appearance of code chunks.
+
+- **Common Options:**
+  - `echo`: Display code in the output (`TRUE`/`FALSE`).
+  - `eval`: Evaluate the code (`TRUE`/`FALSE`).
+  - `include`: Include both code and output in the document (`TRUE`/`FALSE`).
+  - `message` and `warning`: Display messages and warnings (`TRUE`/`FALSE`).
+  - `fig.width` and `fig.height`: Set figure dimensions (in inches).
+
+- **Example:**
+
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+# Your R code here
+```
+
+
+---
+
+### Setting Global Code Chunk Options
+
+- **Purpose:** Apply consistent settings across all code chunks.
+
+- **Method:** Set options in a setup chunk at the beginning of the document.
+
+- **Example:**
+
+```{r setup, include=FALSE}
+# knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+
+- **Benefit:** Simplifies management of chunk behaviors and appearance.
+
+---
+
+### Inline Code in R Markdown
+
+- **Purpose:** Embed R code within text for dynamic reporting.
+
+- **Example:**
+  - Markdown: `The current date is         
+  ```{{r}}
+  # Sys.Date()
+  ```
+  - Output: The current date is `r Sys.Date()`.
+
+- **Use Cases:**
+  - Displaying dynamic values like dates, statistics, or results within narrative text.
+
+---
+
+### Practical Example of Inline Code
+
+- **Scenario:** Reporting the mean of a dataset.
+
+- **R Code:**
+
+```{r}
+  data <- c(5, 10, 15, 20)
+  mean_value <- mean(data)
+```
+
+
+- **Inline Usage:**
+  - Markdown: `The mean of the dataset is `r mean_value`.`
+  - Output: The mean of the dataset is `r mean_value`.
+
+- **Advantage:** Ensures that reported values are always up-to-date with the underlying data and analysis.
+
+---
+
+## Creating Tables in R Markdown
+
+- **Markdown Syntax:** For simple tables.
+- **`knitr::kable()`:** For enhanced formatting.
+- **`kableExtra` Package:** For advanced customization.
+- **`gt` Package:** For complex and aesthetically pleasing tables.
+
+---
+
+## Simple Tables with Markdown
+
+- **Syntax:**
+
+
+### Basit Tablo Oluşturma
+
+-   **Markdown ile Tablo:**
+    -   Sütun başlıkları ve altına `---` çizgileri ile tablo oluşturulur:
+
+        ```         
+        | Sütun 1 | Sütun 2 |
+        |---------|---------|
+        | Veri 1  | Veri 2  |
+        ```
+    - *Note:* Markdown tables are limited in styling and functionality.
+    
+-   **R Koduyla Tablo:**
+    -   `knitr` paketinin `kable` fonksiyonu kullanılır:
+
+        ``` r
+        knitr::kable(iris[1:5, ], caption = "İlk 5 iris verisi")
+        ```
+---
+
+
+## Enhanced Tables with `knitr::kable()`
+
+- **Function:** Converts data frames or matrices into markdown tables.
+
+- **Syntax:**
+
+```{r}
+knitr::kable(data, caption = "Table Caption")
+
+# Sample data
+df <- data.frame(
+  Name = c("John", "Alice"),
+  Age = c(25, 30)
+)
+# Create table
+knitr::kable(df, caption = "Sample Table")
+
+```
+
+
+**Important:** kable() provides a simple way to format tables but has limited styling options.
+
+---
+
+### Formatting Options in kable()
+
+### Advanced Tables with kableExtra
+
+```{r}
+library(kableExtra)
+knitr::kable(data) %>%
+  kable_styling()
+
+# Sample data
+df <- data.frame(
+  Name = c("John", "Alice"),
+  Age = c(25, 30)
+)
+# Create styled table
+knitr::kable(df, caption = "Styled Table") %>%
+  kable_styling(bootstrap_options = "striped", full_width = F)
+
+```
+
+
+Note: kableExtra allows for extensive customization, including adding stripes, borders, and more.
+
+### Creating Elegant Tables with gt
+
+
+---
+
+### Rmd Tips and Tricks
+

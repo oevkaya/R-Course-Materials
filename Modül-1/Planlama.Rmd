@@ -1,0 +1,63 @@
+---
+title: "Genel Planlama"
+author: "oevkaya"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(knitr)
+library(rmarkdown)
+```
+
+
+## Modül 1: R Markdown Giriş ve R Kodlarının R Markdown İçinde Çalıştırılması
+
+- R Markdown Nedir? R Markdown Nasıl Çalışır?
+
+- .Rmd Dosyasının İçeriği Nedir?
+
+- R Markdown Hangi Belge Formatlarını Destekler?
+
+- .Rmd Dosyaları için Çalışma Ortamı Hazırlama
+
+- R, R Studio ve Gerekli Kütüphanelerin Kurulması
+
+- Metin içi Temel Tasarım ve Metin Organizasyonu
+
+- R Kod Bloklarının Kullanımı
+
+- Basit Tablo Oluşturma
+
+- Officer Paketi ve Kod Blokları ile Stil Düzenleme
+
+- Gt ve gtsummary Paketi Temel Ornekleri
+
+- İçindekiler Bölümü Ekleme
+
+- Kaynakça ve Referans Sistemi Oluşturma
+
+- Tüm Stilleri Barındıracak bir Stil Word Dosyası Oluşturma
+
+- Vaka Çalışması: Basit Bir Regresyon Analizinin .Rmd ile Raporlanması
+
+
+## Ana Kaynaklar 
+
+- https://bookdown.org/yihui/rmarkdown/
+
+## Other Useful sources to use
+
+General Tips: https://slides.yihui.org/2019-DahShu-rmarkdown.html#1
+
+kableExtra https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html
+
+gt package https://gt.rstudio.com/index.html
+
+gtsummary package https://www.danieldsjoberg.com/gtsummary/
+
+huxtable package https://cran.r-project.org/web/packages/huxtable/vignettes/huxtable-html.html
+
+flextable package https://ardata-fr.github.io/flextable-book/
