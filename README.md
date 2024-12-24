@@ -11,6 +11,8 @@ Toplam 3 hafta boyunca, haftada iki gun alti saat seklinde uygulanacaktir. Hafta
 
 18 Aralik Carsamba, 14.00 - 17.00 : Modul 1 - Part 1 
 
+[Modul 1 Sunum](https://github.com/oevkaya/R-Course-Materials/blob/600fa08fb7e0344d43cd233155ed643cd402b4cc/Mod%C3%BCl-1/Rmd%20Introduction.pdf)
+
 20 Aralik Cuma, 14.00 - 17.00: Modul 1 - Part 2
 
 ---
