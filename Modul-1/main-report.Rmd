@@ -1,0 +1,42 @@
+---
+title: "Parameterized MTCars Analysis"
+output: html_document
+params:
+  variable: cyl
+  car_subset: 6
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+library(tidyverse)
+```
+
+
+This report provides an analysis of the subset of cars in the mtcars dataset for the group r params$car_subset.
+
+```{r}
+# Filter the mtcars dataset based on the parameter
+filtered_data <- mtcars %>% filter(params$variable == params$car_subset)
+filtered_data
+
+```
+
+```{r}
+summary(filtered_data)
+
+```
+
+```{r}
+ggplot(filtered_data, aes(x = hp, y = mpg)) +
+  geom_point(color = "blue") +
+  labs(title = paste("Miles per Gallon vs Horsepower for", params$car_subset, "Cylinders"),
+       x = "Horsepower (hp)",
+       y = "Miles per Gallon (mpg)")
+
+```
+
+
+### How to Run the Parameterized R Markdown
+
+You can render this file with different values of the `car_subset` parameter by using the `rmarkdown::render()` function in R. For example:
+
+

@@ -1,0 +1,166 @@
+---
+title: "Rmd Ornek"
+author: "oevkaya"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+library(magrittr)
+library(kableExtra)
+```
+
+
+```{r setup, include=FALSE, eval = FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+```
+
+# Rmd Dosyaları ile Calisma
+
+## Veriyi Cagırma
+
+```{r}
+data_cars <- mtcars
+summary(data_cars) %>% kbl() %>% 
+  kable_styling(bootstrap_options = "responsive")
+```
+
+
+```{r, fig.width= 8, fig.height= 6}
+hist(data_cars$mpg)
+
+hist(data_cars$hp)
+```
+
+
+```{r}
+mean_mpg = mean(data_cars$mpg)
+mean_mpg
+```
+Mpg icin ortalama deger `r mean_mpg` olarak bulunmustur.
+
+## R Markdown
+
+Hem **kod** yazmamızı hem de **metin** eklememizi sağlayan bir dosya formatıdır.
+
+1.  Kod: Her bir kod ilgili R code chunk bölümünde olmalı
+
+2.  Metin: markdown diliyle kendi açıklamalarımızı ekleyebiliriz.
+
+### Kod yazımı
+
+```{r}
+head(cars)
+```
+
+| Sütun 1 | Sütun 2 |
+|---------|---------|
+| 14  | Veri 2  |
+| 15  | Veri 2  |
+
+
+```{r cars}
+
+data_cars_new = data_cars[, 1:3]
+# summary_mtcars = summary(data_cars_new)
+
+knitr::kable(data_cars_new, caption = "Mtcars Veri seti Ozet Istatıstikleri", 
+             digits = 2, 
+             col.names = c("Miles per Gallon", "Cyl", "Disp"),
+             align = "l")
+```
+
+
+```{r}
+
+summary_mtcars = summary(data_cars_new)
+summary_mtcars
+
+summary_mtcars %>% 
+  kbl() %>% 
+  kable_styling(full_width = F, font_size = 14, position = "center") %>%
+  column_spec(2, bold = TRUE, color = "white", background = "dodgerblue") %>% 
+  column_spec(4, bold = TRUE, color = "white", background = "green") %>% 
+  row_spec(4, bold = T, color = "black", background = "#D7261E") %>% 
+  kable_minimal() %>% 
+  footnote(general = "disp değişkeni daha yüksek ortalamaya sahip", 
+           general_title = "Ortalama:")
+
+```
+
+
+## Mtcars Egzersiz 
+
+
+```{r mtcars, echo=FALSE, eval=FALSE}
+# Ya da 
+# mtcars_head = head(mtcars, 10)
+# kbl_mtcars = kable(mtcars_head, format = "html",
+#         caption = "Mtcars veri seti için ilk 10 gözlem")
+# kable_styling(kbl_mtcars, bootstrap_options = "striped")
+
+mtcars %>% 
+  head(10) %>% 
+  kable(format = "html",
+        caption = "Mtcars veri seti için ilk 10 gözlem") %>% 
+  kable_styling(bootstrap_options = "striped") %>% 
+  row_spec(0, bold = TRUE) %>% 
+  column_spec(1, bold = TRUE) 
+```
+
+```{r}
+mtcars %>% 
+  head(10) %>% 
+  kable(format = "html",
+        caption = "Mtcars veri seti için ilk 10 gözlem") %>% 
+  kable_styling(bootstrap_options = "striped") %>% 
+  row_spec(0, bold = TRUE) %>% 
+  column_spec(1, bold = TRUE) %>% 
+  add_header_above(c(" " = 1, "Group 1" = 3, "Group 2" = 3, "Group 3" = 5)) %>% 
+  pack_rows("Group 1", 1, 3)
+  
+```
+
+```{r}
+library(gt)
+
+gt_table = gt(data_cars_new %>% head(10))
+gt_table
+
+gt_table %>% tab_header(
+    title = "Mtcars ilk 10 satır - 3 değişken",
+    subtitle = "Sadece mpg, cyl, dsip"
+  ) %>% 
+  fmt_number(
+    columns = vars(mpg),
+    decimals = 0
+  ) %>% 
+    tab_footnote(
+    footnote = "Disp değişkeni cu.in formatında verilmiştir",
+    locations = cells_column_labels(columns = vars(disp))
+  ) %>% 
+  tab_style(style = cell_fill(color = "#D3D3D3"), 
+      locations = cells_body(
+      columns = vars(cyl),
+      rows = cyl > 4
+    )) %>% 
+  summary_rows(groups = NULL,
+               columns = vars(mpg, disp),
+               fns = list(
+                 Ortalama = ~mean(.)
+               ))
+
+
+```
+
+
+```{r}
+library(gtsummary)
+
+# Generate summary table
+gtsummary::tbl_summary(data_cars_new)
+```
+
+
+

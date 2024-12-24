@@ -1,0 +1,761 @@
+---
+title: "Officeverse Details"
+author: "oevkaya"
+date: "`r Sys.Date()`"
+output: 
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+    toc: true
+---
+
+## Modül 2:
+
+- Part 1: Word sablonu ve officeverse paketleri ile biraz daha yola devam
+  - FlexTable
+  - mscharts
+
+- Part 2: Farklı formatlarda verilerle uğraşma
+  - API kullanımı: TCMB EVDS
+
+---
+
+## Introduction to the `officer` Package
+
+- **Purpose:** Facilitates the creation and manipulation of Microsoft Word (`.docx`) and PowerPoint (`.pptx`) documents directly from R.
+- **Key Features:**
+  - Add text, images, tables, and plots to documents.
+  - Customize document styles and layouts.
+  - Automate report generation.
+
+--- 
+
+### Creating a new word doc in R 
+
+```{r}
+# Load the officer package
+library(officer)
+library(flextable)
+
+# Create a new Word document
+doc <- read_docx()
+# Add a title
+doc <- body_add_par(doc, "Introduction to the officer Package", style = "heading 1")
+
+# Add a paragraph of text
+doc <- body_add_par(doc, "The officer package allows R users to generate Word documents programmatically.", style = "Normal")
+
+# Save the document
+print(doc, target = "officer_intro.docx")
+
+```
+
+
+---
+
+### Adding a Table 
+
+```{r}
+# Sample data frame
+df <- data.frame(
+  Name = c("Alice", "Bob", "Charlie"),
+  Score = c(85, 92, 78)
+)
+
+# Add a table to the document
+doc <- body_add_table(doc, value = df, style = "table_template")
+
+# Save the document
+print(doc, target = "officer_intro.docx")
+```
+
+--- 
+
+## Working with Word Templates 
+
+To generate a Word document from R Markdown, you can use the output format word_document. If you want to include cross-references in the document, you may consider the output format bookdown::word_document2
+
+Possible questions to answer;
+
+1. How can I apply a custom Word template to the document?
+
+2. How can I incorporate changes made in Word in the original R Markdown document?
+
+3. How can I style individual document elements?
+
+---
+
+### Custom Word templates
+
+- You can apply the styles defined in a Word template document to new Word documents generated from R Markdown. 
+
+- Such a template document is also called a “style reference document.” The key is that you have to create this template document from Pandoc first, and change the style definitions in it later. 
+
+- Then pass the path of this template to the reference_docx option of word_document
+
+````{verbatim}
+---
+output:
+  word_document:
+    reference_docx: "template.docx"
+---
+````
+
+- As we just mentioned, the document template.docx has to be generated from Pandoc. You can create this template from an arbitrary R Markdown document with the word_document output format (the actual content of this document does not matter, but it should contain the type of elements of which you want to style)
+
+- Then open the .docx file, and edit the styles based on your needs
+
+---
+
+- Then, you can open the “Styles” window from the “HOME” tab in Word. 
+
+- When you move the cursor to a specific element in the document, an item in the styles list will be highlighted. 
+
+- If you want to modify the style of any type of element, you can click the drop-down menu on the highlighted item, and you will see a dialog box
+
+- After you finish modifying the styles, you can save the document (with a filename that will not be accidentally overwritten), and use it as the template for future Word documents
+
+- When Pandoc renders a new Word document with a reference document (template), it will read the styles in the template and apply them to the new document.
+
+- Sometimes it may not be straightforward to find the style name for an element. There may be multiple styles applied to the same element, and you will only see one of them highlighted in the list of styles. It may require some guesswork and online searching to figure out the actual style that you want to modify.
+
+Example from : https://rmarkdown.rstudio.com/articles_docx.html
+
+---
+
+### Style individual elements
+
+- Due to the simplicity of Markdown, you can apply some global styles to the Word document, but it is not straightforward to style individual elements, such as changing the color of a word, or centering a paragraph.
+
+- Continuing his effort to make it easier to work with Office documents in R, David Gohel started to develop the officedown package (Gohel and Ross 2024) in 2018, which aims to bring some officer (Gohel and Moog 2024) features into R Markdown.
+
+- There is an output format rdocx_document in the officedown package, which is based on rmarkdown::word_document by default, and has several other features such as styling tables and plots.
+
+- The officedown package allows you to style specific Word elements via the officer package. For example, you can create a style via the function officer::fp_text(), and apply the style to a piece of text via ftext() an inline R expression
+
+--- 
+
+### Things to do 
+
+- Insert page breaks.
+
+- Put content in a multi-column layout.
+
+- Change paragraph settings.
+
+- Insert a table of contents.
+
+- Change the orientation of a section (landscape or portrait).
+
+To learn more about officedown, please check out its documentation at https://davidgohel.github.io/officedown/.
+
+---
+
+## Insert Citations (Kaynakca)
+
+-   Create citations from a bibliography file, a Zotero library, or from DOI references, by adding the following details on the YAML header
+
+> bibliography: references.bib 
+link-citations: TRUE
+>
+
+-   If you are using Zotero, your main library will automatically be available.
+
+-   Add citations by DOI by searching "from DOI" in the Insert Citation dialog.
+
+- Within your document, cite sources using the citation key from your .bib file by writing [@cite] or @cite in the text. 
+
+- If you are using the Visual Editor, by clicking the @ symbol in the toolbar or by clicking `Insert > Citation`
+
+--- 
+
+### Officedown Package ve otesi
+
+We created a template before so good to keep working on the same file
+
+- Çevrimiçi ve Çevrimdışı Veri Kaynakları Nelerdir? 
+- Web ortamindan ve excel formatı gibi dosyalardan verinin R programına okutulması 
+- Birden Fazla Seri İçeren data.frame Nesneleri Hazırlama 
+
+- flextable Paketi ile Tablo olusturma
+- Bir data.frame Objesinin Tablolaştırılması 
+
+- Genel Amaçlara Yönelik Veri Gorsellestirme - mschart uygulamasi
+- mschart vs ggplot artilar/eksiler
+
+---
+
+## Çevrimiçi ve Çevrimdışı Veri Kaynakları Nelerdir?
+
+- Çevrimiçi Veri Kaynakları: Web ortamından veri almak için `httr`, `rvest` ve `jsonlite` gibi paketler kullanılabilir.
+
+- Çevrimdışı Veri Kaynakları: Yerel dosya sisteminden veri almak için `read.csv`, `read_excel`, veya `readRDS` fonksiyonları kullanılabilir.
+
+---
+
+## Birden Fazla Seri İçeren `data.frame` Nesneleri Hazırlama
+
+- El ile veri çerçevesi oluşturma örneği
+
+- Farklı veri çerçevelerini birleştirme:
+  - merge() function from base R
+  - join_ functions from the tidyverse ecosystem
+
+---
+
+### İlgili paketlere dair 
+
+readr - part of tidyverse
+
+- read_csv() - comma delimited files
+- read_csv2() - semicolon separated files (common in countries where , is used as the decimal place)
+- read_tsv() - tab delimited files
+- read_delim() - reads in files with any delimiter
+
+
+readxl - not part of tidyverse
+- read_excel() - read xls or xlsx files
+
+Most read functions have a corresponding write function.
+
+---
+
+### Veriyi Isleme
+
+- Ornek Veri Seti uygulamasi
+
+```{r}
+Sys.setlocale("LC_CTYPE", "tr_TR.UTF-8")
+```
+- R doesn't allow spaces in variable names
+
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(mschart)
+
+# Load data
+library(readxl)
+Kredi_Mevduat_Faiz_Orani <- read_excel("veri/Kredi_Mevduat_Faiz_Orani.xlsx", 
+    skip = 2)
+
+colnames(Kredi_Mevduat_Faiz_Orani) <- c("Tarih", "İhtiyaç", "Tasit", "Konut",
+                                       "Tüketici", "Ticari", "İhtiyaç2", 
+                                       "Tüketici2", "Ticari3", "TL_Mevduat_1ay",
+                                       "TL_Mevduat_3ay", "TL_Mevduat_6ay", 
+                                       "TL_Mevduat_1yil", "TL_Mevduat_1yiluzeri",
+                                       "Toplam") 
+
+```
+
+---
+
+## clean_names to snake_case
+
+```{r, eval=FALSE, warning=FALSE}
+library(janitor) 
+Kredi_Mevduat_Faiz_Orani_clean <- read_excel("veri/Kredi_Mevduat_Faiz_Orani.xlsx", 
+    skip = 2) %>%
+  clean_names()
+
+colnames(Kredi_Mevduat_Faiz_Orani_clean)
+
+```
+
+---
+
+### Tables with flextable
+
+Possible version issues with gdtools, systemfonts packages as dependencies
+
+- The flextable package provides a framework for easily create tables for reporting and publications. 
+
+- Tables can be easily formatted with a set of verbs such as bold(), color(), they can receive a header of more than one line, cells can be merged or contain an image. 
+
+- The package make it possible to build any table for publication from a data.frame and provides sugar function as_flextable() to convert several R objects to a flextable, such as an object return from table() or a model.
+
+- Tables can be embedded within HTML, PDF, Word and PowerPoint documents from R Markdown documents and within RTF or Microsoft Word or PowerPoint documents with package officer.
+
+- Tables can also be rendered as R plots or graphic files (png).
+
+---
+
+## Bazı Özellikler
+
+- A flextable object is a data.frame representation. 
+
+- An API is available to let R users create tables for reporting and control their formatting properties and their layout. The package provides functions that give control over:
+  - header, body and footer content
+  - text, paragraphs, cells and border formatting of any element
+  - displayed values
+
+---
+
+## Basit ornek 
+
+```{r}
+flextable(head(Kredi_Mevduat_Faiz_Orani)) %>% 
+  theme_vanilla()
+```
+
+
+---
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+
+# Create the group variable
+Kredi_Mevduat_Faiz_Orani <- Kredi_Mevduat_Faiz_Orani %>%
+  mutate(Group = ifelse(Toplam > 25, "yuksek", "dusuk"))
+
+```
+
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+library(flextable)
+
+# Summarize the data by "Group"
+summarized_data <- Kredi_Mevduat_Faiz_Orani %>%
+  group_by(Group) %>%
+  summarize(
+    mean_Ihtiyac = mean(İhtiyaç, na.rm = TRUE),
+    mean_Tasit = mean(Tasit, na.rm = TRUE),
+    mean_Konut = mean(Konut, na.rm = TRUE),
+    mean_Tüketici = mean(Tüketici, na.rm = TRUE),
+    mean_Toplam = mean(Toplam, na.rm = TRUE)
+  )
+
+# Create a flextable for the summarized data
+flextable_data <- as_flextable(summarized_data, spread_first_col = TRUE)
+
+# Print flextable
+flextable_data
+
+```
+
+
+---
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+library(flextable)
+library(officer)
+
+# Preprocess the data: Select only numeric columns and the Group variable
+numeric_data <- Kredi_Mevduat_Faiz_Orani %>%
+  select(Group, where(is.numeric))
+
+# Use summarizor to summarize the data by "Group"
+summarized_data <- numeric_data %>%
+  summarizor(by = c("Group"))
+
+# Clean the summarized data
+cleaned_data <- summarized_data %>%
+  filter(!is.na(value1),             # Remove rows where value1 is NA
+         !is.na(value2),             # Remove rows where value2 is NA
+         !is.infinite(value1),       # Remove rows where value1 is Inf or -Inf
+         !is.infinite(value2))       # Remove rows where value2 is Inf or -Inf
+
+cleaned_data <- cleaned_data %>%
+  filter(!is.na(variable), !is.na(stat), !is.na(Group)) %>% 
+  select(-c("cts", "percent"))
+
+```
+
+---
+
+```{r}
+# Load necessary library
+library(flextable)
+
+# Create a flextable
+flextable_data <- cleaned_data %>%
+  flextable() %>%                          # Convert to flextable
+  set_header_labels(                       # Rename column headers for better clarity
+    variable = "Variable",
+    stat = "Statistic",
+    value1 = "Value1",
+    value2 = "Value2",
+    data_type = "DataType",
+    Group = "Group"
+  ) %>%
+  autofit()                                # Auto-adjust column widths
+
+# Display flextable
+ft <- flextable_data
+ft
+```
+
+
+--- 
+
+### Setting Properties
+
+```{r}
+set_flextable_defaults(
+  font.family = "Arial", eastasia.family = "Arial",
+  font.size = 10, font.color = "darkred",
+  border.color = "gray")
+
+flextable(cleaned_data) %>% 
+  set_header_labels(            
+    variable = "Variable",
+    stat = "Statistic",
+    value1 = "Value1",
+    value2 = "Value2",
+    data_type = "DataType",
+    Group = "Group"
+  )
+```
+
+
+- Note: Properties can be reset to package defaults with function init_flextable_defaults()
+
+---
+
+### Vurgulamaya dair - Tek değişken
+
+```{r}
+
+flextable(head(Kredi_Mevduat_Faiz_Orani, 10)) %>% 
+  highlight(i = ~ Tüketici < 22, color = "#ffe842") %>% 
+  bg(j = c("Tasit", "Konut"), 
+     bg = scales::col_quantile(palette = c("wheat", "red"), domain =NULL)) |> 
+  add_footer_lines("Kredi Mevduat Faiz Verisi")
+```
+
+---
+
+### Vurgulamaya dair - İki Değişken
+
+```{r}
+
+flextable(head(Kredi_Mevduat_Faiz_Orani, 10)) %>% 
+  highlight(i = ~ Tüketici < 22, j = "Konut", color = "#ffe842") %>% 
+  bg(j = c("Tasit", "Konut"), 
+     bg = scales::col_quantile(palette = c("wheat", "red"), domain =NULL)) |> 
+  add_footer_lines("Kredi Mevduat Faiz Verisi")
+```
+
+
+---
+
+### Sayılara dair
+
+- digits (not applied when creating a flextable because the default formatter for numerics is function colformat_num())
+
+- decimal.mark sets the decimal seperator, usually ‘,’ or ‘.’
+
+- big.mark sets the thousands separator, usually ’ ‘,’,’ or ‘.’
+
+```{r}
+set_flextable_defaults(
+  digits = 2,
+  decimal.mark = ",",
+  big.mark = " ",
+  na_str = "<na>"
+)
+```
+
+
+---
+
+## Table Parts
+
+A flextable object is composed of 3 parts:
+
+- header: by default there is only one header row containing the names of the data.frame.
+
+- body: by default contains the data from the data.frame.
+
+- footer: none by default but can contain content. Commonly used for footnotes.
+
+---
+
+### Selectors
+
+- Selectors can be used to specify the rows and columns where an operation should happened. 
+
+- Many flextable functions have selectors i and j: bg(), bold(), hline(), color(), padding(), fontsize(), italic(), align(), compose().
+
+- It makes conditional formatting easy and multiple operations can be seamlessly piped 
+
+```{r}
+qflextable(head(Kredi_Mevduat_Faiz_Orani, 10)) %>% 
+  color(~ İhtiyaç < 50, color = "red", ~ İhtiyaç + Tasit )
+```
+
+---
+
+```{r}
+flex_head_table <- qflextable(head(Kredi_Mevduat_Faiz_Orani, 10))
+
+flex_head_table %>% 
+  color(i = 1:5, j = 2:8, color = "orange") %>% 
+  color(i = 1, color = "black", part = "header")
+  
+```
+
+---
+
+### Adding separater line
+
+```{r}
+border <- fp_border_default()
+flex_head_table %>% vline(j = c("Tarih", 'Ticari3', 'Toplam'), 
+                          border = border, part = "all")
+```
+
+
+---
+
+### Arkaplan vurgusu
+
+```{r}
+flex_head_table %>% 
+  bg(i = ~ TL_Mevduat_3ay < 45, 
+  j = c('İhtiyaç', 'Tasit', 'Konut'), 
+  bg = "orange", part = "body")
+```
+
+---
+
+### Table Layout
+
+- Widths or heights must be used wisely. 
+
+```{r}
+set_table_properties(flex_head_table, width = .5, layout = "autofit") %>% 
+  theme_box()
+```
+
+---
+
+## Formatting of cell content
+
+Each accept a prefix and suffix argument that can be used to add a currency symbol for example. Also they all have na_str argument (defaut to ““), the string to use when data are not available.
+
+- colformat_num() let you format columns of type numeric as it is formatted in your R console. This is the default function applied to all numeric columns when a flextable is created. It does not support digits argument, it uses default R options through calls to format().
+
+- colformat_double() with arguments digits and big.mark: let you format columns of type double.
+
+- colformat_int() with arguments big.mark: let you format columns of type integer.
+
+- colformat_char(): let you format columns of type character.
+
+- colformat_lgl(): let you format columns of type logical.
+
+- colformat_image(): let you format image paths as images.
+
+- colformat_date() and colformat_datetime(): let you format columns of type date and datetime (POSIX).
+
+---
+
+```{r}
+flex_head_table %>% 
+  mk_par(j = "Tarih", 
+          value = as_paragraph(
+            as_chunk(Tarih, 
+                     props = fp_text_default(color = "#C32900", bold = TRUE)))) %>% 
+  mk_par(j = "İhtiyaç", 
+          value = as_paragraph(
+            as_chunk(İhtiyaç, 
+                     props = fp_text_default(color = "#006699", bold = TRUE))))
+```
+
+---
+
+### Captions with set_caption
+
+- Caption paragraph can be formatted with a call to as_paragraph(). 
+
+- There is no markdown transformation, instead, use the available functions of flextable dedicated to the chunks formatting: as_b(), as_chunk(), as_equation(), as_highlight(), as_image(), as_sub(), as_sup(), colorize(), grid_chunk(), hyperlink_text()
+
+```{r}
+flex_head_table <- flex_head_table %>% 
+  set_caption("Kredi Mevduat Gozlemleri", 
+  autonum = run_autonum(seq_id = "tab", bkm = "Kredi10"),
+   caption = as_paragraph(as_b("Kredi")))
+flex_head_table
+```
+
+---
+
+### Bazı kaynaklar 
+
+
+- User guide: https://ardata-fr.github.io/flextable-book/
+
+- Manuals: https://davidgohel.github.io/flextable/reference/index.html
+
+- Gallery of examples: https://ardata.fr/en/flextable-gallery/
+
+---
+
+### Extensions
+
+- The ftExtra package provides helper functions for the flextable package. For example, colformat_md() parses markdown texts in columns:
+
+- The crosstable package provides also an elegant and easy way to compute and display descriptive statistics:
+
+- The gtsummary package provides an elegant and flexible way to create publication-ready analytical and summary tables using the R programming language. The {gtsummary} package summarizes data sets, regression models, and more, using sensible defaults with customizable capabilities.
+
+---
+
+### Charts with mschart
+
+- Package mschart lets R users to create Microsoft Office charts from data, and then add title, legends, and annotations to the chart object.
+
+- The graph produced is a Microsoft graph, which means that it can be edited in your Microsoft software and that the underlying data are available.
+
+- The package will not allow you to make the same charts as with ggplot2. 
+
+- It allows only a subset of the charts possible with ‘Office Chart’. 
+
+- The package is often used to industrialize graphs that are then consumed and annotated by non-R users.
+
+---
+
+### How to create?
+
+Names of high level functions are all prefixed with ms_. The following charts are the only available from all possible MS charts:
+
+- barcharts: `ms_barchart()`
+
+- line charts: `ms_linechart()`
+
+- scatter plots: `ms_scatterchart()`
+
+- area charts: `ms_areachart()`
+
+```{r, eval=FALSE}
+# They all are producing a chart that can be quickly previewed with command:
+print(the_chart, preview = TRUE)
+```
+
+
+---
+
+- After the creation of the object, it can be customized
+    - by using options specific to the chart (with chart_settings()),
+    - by changing the options related to the axes (with chart_ax_x() and chart_ax_y()),
+    - by changing the options related to the labels (with chart_data_labels()),
+    - by changing the colors, line widths, … 
+    - by changing the general theme with function chart_theme(),
+    - by changing the title labels with function chart_labels()
+
+---
+
+### Genel Kullanim
+
+To call an high level function (one of those starting with ms_). These functions accept the following arguments:
+
+- data: the data.frame containing the data to be plotted.
+
+- x, y, the names of x and y columns.
+
+- eventually group: a column name that contains the groups that will separate the data into distinct series.
+
+- eventually labels: a column name that will be used as labels associated with the graphic elements. If more than a value, the first value is used for custom labels, the other columns will be written in the underlying ‘Microsoft Excel’ file so that users can manually choose these labels.
+
+my_barchart <- ms_barchart(data = browser_data, 
+  x = "browser", y = "value", group = "serie")
+
+---
+
+## Ornekler
+
+Buradan yola cikarak bazi ornekler 
+
+https://ardata-fr.github.io/officeverse/charts-with-mschart.html
+
+---
+
+## Example 1: Line Chart of Interest Rates
+
+```{r}
+
+line_chart <- ms_linechart(data = Kredi_Mevduat_Faiz_Orani, 
+                           x = "Tarih", y = "İhtiyaç")
+line_chart <- chart_settings(line_chart, grouping = "stacked")
+
+print(line_chart, preview = TRUE)
+
+```
+
+---
+
+### Word içine ekleme
+
+```{r, eval=FALSE}
+doc <- read_docx()
+doc <- body_add_chart(doc, chart = line_chart, style = "Normal")
+print(doc, target = "officer_intro.docx")
+```
+
+---
+
+### Grouping 
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+library(mschart)
+
+# Create the group variable
+Kredi_Mevduat_Faiz_Orani <- Kredi_Mevduat_Faiz_Orani %>%
+  mutate(Group = ifelse(Toplam > 25, "yuksek", "dusuk"))
+
+# Summarize data for barchart (e.g., mean of Tüketici by Group)
+barchart_data <- Kredi_Mevduat_Faiz_Orani %>%
+  group_by(Group) %>%
+  summarize(mean_Tüketici = mean(Tüketici, na.rm = TRUE))
+
+# Create a barchart using mschart
+barchart <- ms_barchart(data = barchart_data, x = "Group", y = "mean_Tüketici")
+barchart <- chart_settings(barchart, grouping = "stacked")
+
+# Print barchart
+print(barchart, preview = TRUE)
+
+```
+
+
+--- 
+
+### mschart Paketinin Artıları ve Eksileri
+
+**Artıları:**
+- **Microsoft Office Entegrasyonu:** `mschart`, R'da oluşturulan grafiklerin Microsoft Word ve PowerPoint belgelerine doğrudan eklenmesine olanak tanır. :contentReference[oaicite:0]{index=0}
+- **Düzenlenebilir Grafikler:** Oluşturulan grafikler Office uygulamalarında düzenlenebilir ve veriler belgede saklanır. :contentReference[oaicite:1]{index=1}
+
+**Eksileri:**
+- **Sınırlı Grafik Türleri:** `mschart`, yalnızca sınırlı sayıda grafik türünü destekler: çubuk grafikler, çizgi grafikler, dağılım grafikleri ve alan grafikleri. :contentReference[oaicite:2]{index=2}
+- **Esneklik Eksikliği:** `ggplot2`'nin sunduğu özelleştirme ve esneklik düzeyine sahip değildir.
+
+---
+
+### ggplot2 Paketinin Artıları ve Eksileri
+
+**Artıları:**
+- **Geniş Grafik Yelpazesi:** `ggplot2`, çok çeşitli grafik türlerini destekler ve karmaşık görselleştirmeler oluşturabilir.
+- **Yüksek Özelleştirme:** Grafiklerin hemen her yönü özelleştirilebilir, bu da esneklik sağlar.
+- **Aktif Topluluk ve Kaynaklar:** `ggplot2`, geniş bir kullanıcı tabanına ve bol miktarda belgeye sahiptir.
+
+**Eksileri:**
+- **Office Entegrasyonu Yok:** Oluşturulan grafikler doğrudan Microsoft Office belgelerine düzenlenebilir formatta eklenemez.
+- **Öğrenme Eğrisi:** Yeni başlayanlar için `ggplot2`'nin sözdizimi ve konseptleri başlangıçta karmaşık gelebilir.
+
+---
+
+### Yani? 
+
+- **`mschart`:** Microsoft Office belgeleriyle sıkça çalışan ve grafiklerin düzenlenebilir olmasını isteyen kullanıcılar için idealdir.
+- **`ggplot2`:** Gelişmiş ve özelleştirilebilir veri görselleştirmeleri oluşturmak isteyen kullanıcılar için daha uygundur.
+
+---
+

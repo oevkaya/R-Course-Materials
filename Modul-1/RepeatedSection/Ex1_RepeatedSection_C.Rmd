@@ -1,0 +1,29 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+`r sprintf("## Subsection %s",i)`
+
+```{r}
+
+
+pander(dftemp[1:5,],
+       caption = sprintf("A caption for a table in section %s", i))
+
+```
+
+There are `r nrow(dftemp)` observations in total
+
+```{r}
+
+ggplot(dftemp, aes(x = Subsection, y = x))+
+  geom_boxplot()+
+  theme_bw()
+
+
+```
+
+
+
+\newpage

@@ -1,0 +1,243 @@
+---
+date: "`r Sys.Date()`"
+author: "Your Name"
+title: "officedown template"
+output: 
+  officedown::rdocx_document:
+    reference_docx: "officedown_sablon.docx"
+    tables: 
+      style: Table
+      caption:
+        pre: "Tablo"
+    plots:
+      style: Normal
+      caption:
+        pre: "Şekil"
+    mapstyles:
+      Normal: ['First Paragraph']
+    page_size:
+      width: 10
+      height: 12
+    page_margins:
+      bottom: 1
+      top: 0.5
+      header: 0.25
+      footer: 0.25
+bibliography: references.bib
+link-citations: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.cap = TRUE, fig.topcaption=TRUE, 
+                      warning = FALSE, message = FALSE)
+
+# This document presents most of the features of the package `r ftext("officedown", ft)`. `r fp`
+
+library(officedown)
+library(officer)
+
+fp <- fp_par(
+  text.align = "center", 
+  padding.bottom = 20, padding.top = 120, 
+  border.bottom = fp_border())
+
+ft <- fp_text(shading.color='#EFEFEF', bold = TRUE)
+```
+
+
+<!-- \newpage -->
+
+## Table of content
+
+```{r, echo=FALSE}
+block_toc()
+```
+
+
+## List of figures
+
+
+```{r, echo=FALSE}
+block_toc(style = "Şekil Başlıkları")
+```
+
+
+## List of tables
+
+```{r, echo=FALSE}
+block_toc(style = "Tablo Başlıkları")
+```
+
+<!---BLOCK_TOC{seq_id: 'tab'}--->
+
+
+\newpage
+
+## Sections
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eu pulvinar arcu, quis aliquam dui. In at cursus ante. Vestibulum non sagittis lacus. Duis vitae iaculis dui. Vivamus tempor, nibh ut pretium tempus, enim lorem dignissim quam, at euismod massa magna at magna. 
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eu pulvinar arcu, quis aliquam dui. In at cursus ante. Vestibulum non sagittis lacus. Duis vitae iaculis dui. Vivamus tempor, nibh ut pretium tempus, enim lorem dignissim quam, at euismod massa magna at magna. Sed facilisis dapibus diam nec volutpat. Maecenas facilisis dapibus egestas. Curabitur dignissim pharetra pulvinar. Nunc bibendum elit sed cursus congue. Curabitur ligula quam, iaculis faucibus orci quis, vestibulum lobortis lectus. Suspendisse fringilla nisl pulvinar, laoreet tellus sed, sollicitudin tortor. Donec consequat congue erat in iaculis. Curabitur luctus tellus ut turpis iaculis, nec laoreet ligula scelerisque.
+
+<!---BLOCK_LANDSCAPE_START--->
+
+### Landscape section
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eu pulvinar arcu, quis aliquam dui. In at cursus ante. Vestibulum non sagittis lacus. Duis vitae iaculis dui. Vivamus tempor, nibh ut pretium tempus, enim lorem dignissim quam, at euismod massa magna at magna. Sed facilisis dapibus diam nec volutpat. 
+
+```{r, echo=FALSE, fig.cap="Sütun Grafiği", fig.id = "barplot_1"}
+barplot(1:5, col=1:5)
+```
+
+Yukarıda verilen sütun grafiğinde (Şekil \@ref(fig:barplot_1)) gösterildiği üzere, ...
+
+<!---BLOCK_LANDSCAPE_STOP--->
+
+\newpage
+
+### Regresyon Analizi
+
+```{r}
+# library(tidyverse)
+# library(tidymodels)
+
+library(broom)
+library(kableExtra)
+library(magrittr)
+
+model_reg <- lm(mpg ~ wt + hp, data = mtcars)
+summary(model_reg)
+
+# Ozet ıstatistigini daha duzenli elde etmek ıcın
+model_summary <- glance(model_reg)
+model_summary
+
+model_summary %>% kable(caption = "Model Performans ozeti")
+
+# Ya da Flextable ile 
+# model_summary_veri <- as.data.frame(model_summary)
+
+# library(flextable)
+# ft <- flextable(model_summary_veri)
+
+# ft <- set_caption(ft, "Model performans Ozeti")
+# ft <- theme_vanilla(ft)
+# ft
+
+```
+
+
+```{r}
+library(performance)
+library(report)
+
+performance::check_model(model_reg)
+
+model_performance(model_reg) 
+```
+
+```{r}
+report(mtcars)
+report(model_reg)
+```
+\newpage
+
+## Tables
+
+### Table 1
+
+
+```{r tab.cap="mtcars verisinin ilk 6 satırı", tab.id="mtcars"}
+head(mtcars)
+```
+
+### Table 2
+
+```{r tab.cap="iris"}
+head(iris)
+```
+
+
+### Table 3
+
+```{r tab.cap="cars", tab.id="cars"}
+head(cars)
+
+run_num <- run_autonum(seq_id = "tab", pre_label = "Tab.", 
+                      "Verinin ilk birkac gozlemi" )
+
+block_caption("Verinin ilk birkaç gözlemi", 
+              style = "Table Caption", 
+              autonum = run_num)
+
+```
+
+
+\@ref(tab:cars)'de özetlendiği gibi, belirli aracların özellikleri birbirinden farklı görünmektedir.
+
+```{r}
+metin_ornek <- fp_text(color = "red", font.size = 23, bold = TRUE)
+```
+
+Yukarıda tabloda altı cızılen `r ftext("arac sahıplerine", metin_ornek)` ....
+
+## figures 
+
+
+### A boxplot
+
+```{r fig.cap="A boxplot", fig.id = "boxplot"}
+boxplot(1:8)
+
+```
+
+### A barplot
+
+```{r fig.cap="What a barplot", fig.id = "barplot_2"}
+barplot(1:8)
+```
+
+## Lists
+
+Amet nunc eros curabitur tellus massa, eros maximus porttitor sociosqu, pellentesque.
+
+* Erat mauris egestas finibus tincidunt sed in rhoncus a tellus etiam. 
+    - A adipiscing per ultricies justo tellus lorem. 
+        - Imperdiet ut dui primis, sed gravida, at sed nulla. 
+        - Sem posuere lacus consequat inceptos dapibus duis malesuada finibus. 
+    - Urna sed dui, ornare, eu turpis mus pellentesque amet amet bibendum. 
+* Himenaeos tincidunt, auctor dapibus scelerisque, montes nunc faucibus 
+sodales malesuada ridiculus sed cubilia ligula.
+
+
+1. Erat mauris egestas finibus tincidunt sed in rhoncus a tellus etiam. 
+    1. A adipiscing per ultricies justo tellus lorem. 
+        1. Imperdiet ut dui primis, sed gravida, at sed nulla. 
+        2. Sem posuere lacus consequat inceptos dapibus duis malesuada finibus. 
+    2. Urna sed dui, ornare, eu turpis mus pellentesque amet amet bibendum. 
+2. Himenaeos tincidunt, auctor dapibus scelerisque, montes nunc faucibus 
+sodales malesuada ridiculus sed cubilia ligula.
+
+
+Lorem dolor interdum orci eros pellentesque semper tristique, sodales, et sed
+ut! Porta mattis natoque et. Ac facilisi ipsum viverra elementum vestibulum
+ligula amet enim magnis luctus ullamcorper. Rhoncus rhoncus elit in at nisl.
+Tincidunt habitant sit.
+
+
+* Aptent conubia quam montes id sagittis.
+    - Mattis nisi nascetur, aliquam duis ex, tristique.
+        - Imperdiet ut dui primis, sed gravida, at sed nulla. 
+        - Donec ligula nulla ac. Nisl ac at accumsan sagittis eros felis lobortis amet 
+        nec phasellus urna bibendum sapien.
+    - Eu dui ac id, dictum proin consectetur convallis.
+* Facilisi eu lectus mauris lorem. Et sed sapien pellentesque sed etiam vehicula. 
+* In porttitor id lorem eu efficitur, nisl dis!
+
+
+See figure \@ref(fig:boxplot) and table \@ref(tab:mtcars)!
+
+All examples are created using certain packages belong to [@Rbase] language. 
+
+
+# References {.unnumbered}
